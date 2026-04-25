@@ -12,20 +12,23 @@
 
 | Category          | Score    |
 | ----------------- | -------- |
-| **Setup**         | ... / 10 |
-| **Execution**     | ... / 20 |
-| **Documentation** | ... / 10 |
-| **Presentation**  | ... / 30 |
-| **Total**         | ... / 70 |
+| **Setup**         | 10 / 10 |
+| **Execution**     | 20 / 20 |
+| **Documentation** | 10 / 10 |
+| **Presentation**  | 30 / 30 |
+| **Total**         | 70 / 70 |
 
 ### Reflection
 <!-- Edit the following section with your reflection -->
 
 #### What went well?
+Overall the project was a great learning experience, especially the machine learning.
 #### What did not go well?
+I didn't have any issues learning this.
 #### What did you learn?
+Machine Learning
 #### What would you do differently next time?
-
+Take more time to explore more datasets.
 ---
 
 ## Getting Started

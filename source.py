@@ -44,7 +44,7 @@
 # 
 # My approach is to combine emissions data from multiple datasets and analyze trends over time. I will clean and merge the datasets using common variables such as country and year. The data will be stored and queried using a SQLite database. I will then create visualizations, such as line charts, to observe how emissions change over time and compare patterns across countries. This analysis will help determine how emissions relate to climate change trends.
 
-# In[394]:
+# In[625]:
 
 
 # Import necessary libraries for data manipulation and visualization.
@@ -67,7 +67,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.metrics import mean_squared_error
 
 
-# In[395]:
+# In[626]:
 
 
 # Import the data from Our World in Data and store it in a DataFrame.
@@ -78,7 +78,7 @@ df = pd.read_csv(url)
 df.sample(5)
 
 
-# In[397]:
+# In[627]:
 
 
 # Create a new DataFrame with the relevant columns for distinct countries and assign a unique country_id to each country.
@@ -90,7 +90,7 @@ countries["country_id"] = countries.index + 1
 countries.sample(10)
 
 
-# In[398]:
+# In[628]:
 
 
 # Merge the country_id back to the main DataFrame
@@ -99,7 +99,7 @@ df = df.merge(countries, on="country")
 df.sample(10)
 
 
-# In[399]:
+# In[629]:
 
 
 # Create a new DataFrame with the relevant columns for emissions.
@@ -107,7 +107,7 @@ population = df[["country_id", "year", "population"]]
 population.head()
 
 
-# In[400]:
+# In[630]:
 
 
 # Create a new DataFrame with the relevant columns for emissions.
@@ -116,7 +116,7 @@ emissions = df[["country_id", "year", "co2", "methane"]]
 emissions.sample(5)
 
 
-# In[401]:
+# In[631]:
 
 
 # Store the DataFrames in a SQLite database.
@@ -127,7 +127,7 @@ emissions.to_sql("emissions", conn, if_exists="replace", index=False)
 population.to_sql("population", conn, if_exists="replace", index=False)
 
 
-# In[402]:
+# In[632]:
 
 
 # Write a SQL query to join the three tables and retrieve the country name, year, CO2 emissions, methane emissions, and population.
@@ -142,14 +142,14 @@ database_result = pd.read_sql(query, conn)
 database_result.sample(5)
 
 
-# In[403]:
+# In[633]:
 
 
 # Import the Indicator data downloaded from World Bank and store it in a DataFrame.
 WorldBank_Development_Indicator_df = pd.read_table('WorldBank_Development_Indicators_Data.csv', sep=',')
 
 
-# In[404]:
+# In[634]:
 
 
 # Import data from csv files imported from Kaggle and store it in DataFrames.
@@ -164,7 +164,7 @@ Carbon_emissions_per_capita_df = pd.read_table('co-emissions-per-capita new.csv'
 
 # ## 1. Exploratory Data Analysis (EDA)
 
-# In[405]:
+# In[635]:
 
 
 # Perform basic data analysis on the database_result DataFrame to understand the structure and summary statistics of the data.
@@ -175,28 +175,28 @@ database_result.describe()
 # - My dataset from the database has yearly data for different countries showing the emission details like CO2 and methane and it also lists population.
 # - CO2, methane, and population have a lot of missing data.
 
-# In[406]:
+# In[636]:
 
 
 # Checks for missing values in the database_result DataFrame.
 database_result.isnull().sum()
 
 
-# In[407]:
+# In[637]:
 
 
 # Checking the data types of the columns in the database_result DataFrame.
 print(database_result.dtypes)
 
 
-# In[408]:
+# In[638]:
 
 
 # Check for duplicates in the database_result DataFrame.
 database_result.duplicated().sum()
 
 
-# In[409]:
+# In[605]:
 
 
 # Display a random sample of 5 rows from the WorldBank_Development_Indicator_df DataFrame to get an overview of the data.
@@ -205,7 +205,7 @@ WorldBank_Development_Indicator_df.sample(5)
 
 # - The World Bank Development Indicators dataset contains Country Name, Series Name, and many year columns. Since the data is in a wide format, it needs to be reshaped into a clearer structure for easier analysis.
 
-# In[410]:
+# In[639]:
 
 
 # Reshape the WDI dataset from wide to long format by converting year columns into a single 'year' column,
@@ -221,7 +221,7 @@ wdi_reshaped = WorldBank_Development_Indicator_df.melt(
 wdi_reshaped.sample(5)
 
 
-# In[411]:
+# In[640]:
 
 
 # Perform basic data analysis on the wdi_reshaped DataFrame to understand the structure and summary statistics of the data.
@@ -233,7 +233,7 @@ wdi_reshaped.describe()
 # - The summary statistics also show only unique, top and freq indicating the data type correction needs to happen
 # - The Year field has some inconsistent values which need to be cleaned
 
-# In[412]:
+# In[641]:
 
 
 # Perform basic data analysis on the Methane_final_df DataFrame to understand the structure and summary statistics of the data.
@@ -245,28 +245,28 @@ Methane_final_df.describe()
 # 
 # - This dataset doesn't have any missing values.
 
-# In[413]:
+# In[642]:
 
 
 # Checking for null values in the Methane_final_df DataFrame.
 Methane_final_df.isnull().sum()
 
 
-# In[414]:
+# In[610]:
 
 
 # Check for duplicates in the Methane_final_df DataFrame.
 Methane_final_df.duplicated().sum()
 
 
-# In[415]:
+# In[643]:
 
 
 # Checking the data types of the columns in the Methane_final_df DataFrame.
 print(Methane_final_df.dtypes)
 
 
-# In[416]:
+# In[644]:
 
 
 # Perform basic data analysis on the Carbon_emissions_df DataFrame to understand the structure and summary statistics of the data.
@@ -278,35 +278,35 @@ Carbon_emissions_df.describe()
 # - There is no null values in this dataset.
 # - There is no year field so, I need to a create a year field from the date to be able to join to the other datasets.
 
-# In[417]:
+# In[645]:
 
 
 # Check a sample of the data from the carbon emissions dataset.
 Carbon_emissions_df.head(5)
 
 
-# In[418]:
+# In[646]:
 
 
 # Checking for null values in the Carbon_emissions_df DataFrame.
 Carbon_emissions_df.isnull().sum()
 
 
-# In[419]:
+# In[647]:
 
 
 # Check for duplicates in the Carbon_emissions_df DataFrame.
 Carbon_emissions_df.duplicated().sum()
 
 
-# In[420]:
+# In[648]:
 
 
 # Checking the data types of the columns in the Carbon_emissions_df DataFrame.
 print(Carbon_emissions_df.dtypes)
 
 
-# In[421]:
+# In[649]:
 
 
 # Perform basic data analysis on the Carbon_emissions_per_capita_df DataFrame to understand the structure 
@@ -318,35 +318,35 @@ Carbon_emissions_per_capita_df.describe()
 # - The carbon emissions per capita has data showing annual CO2 emissions per capita. For each entity(country) per year.
 # - There are no null values for this dataset.
 
-# In[422]:
+# In[650]:
 
 
 # Check the data from the carbon emissions per capita dataset.
 Carbon_emissions_per_capita_df.sample(5)
 
 
-# In[423]:
+# In[651]:
 
 
 # Checking for null values in the Carbon_emissions_per_capita_df DataFrame.
 Carbon_emissions_per_capita_df.isnull().sum()
 
 
-# In[424]:
+# In[652]:
 
 
 # Check for duplicates in the Carbon_emissions_per_capita_df DataFrame.
 Carbon_emissions_per_capita_df.duplicated().sum()
 
 
-# In[425]:
+# In[653]:
 
 
 # Checking the data types of the columns in the Carbon_emissions_per_capita_df DataFrame.
 print(Carbon_emissions_per_capita_df.dtypes)
 
 
-# In[426]:
+# In[654]:
 
 
 # Create a bar plot to visualize the distribution of CO2 emissions in the result DataFrame.
@@ -363,7 +363,7 @@ plt.show()
 # ##### I prepared the above visualization using a bar plot to show the distribution of CO2 emissions across various countries.
 # ##### The graph shows that the data is right-skewed meaning that few countries produce high emissions.
 
-# In[427]:
+# In[655]:
 
 
 # Create a line plot to visualize the average CO2 and methane emissions over time.
@@ -382,7 +382,7 @@ plt.show()
 # ##### The above line plot shows how both CO2 and Methane emissions have changed over time.
 # ##### This graph helps us identify the increasing trends of the emissions.
 
-# In[428]:
+# In[656]:
 
 
 wdi_reshaped['Series Name'].value_counts().plot(kind='bar')
@@ -390,7 +390,7 @@ wdi_reshaped['Series Name'].value_counts().plot(kind='bar')
 
 # - The bar chart shows the distribution of records across different indicators in the dataset. It helps identify how frequently each indicator appears after reshaping.
 
-# In[429]:
+# In[657]:
 
 
 # Create a bar plot to visualize the emissions by type.
@@ -410,7 +410,7 @@ plt.show()
 # - The above bar plot shows a different type of methane emissions.
 # - Based on this graph I can tell that agriculture causes higher emissions than the rest.
 
-# In[430]:
+# In[658]:
 
 
 # Create a pie chart to visualize the share of CO2 emissions by country for the top 10 emitting countries.
@@ -423,7 +423,7 @@ plt.show()
 
 # ##### - The above pie chart shows emissions of the top 10 countries. This graph tells me that majority of the emsission are from these 10 countries.
 
-# In[431]:
+# In[659]:
 
 
 # Create a horizontal bar plot to visualize the top 10 entities by CO2 emissions per capita. 
@@ -449,14 +449,14 @@ plt.show()
 
 # - Clean up the data in database_result dataframe
 
-# In[432]:
+# In[660]:
 
 
 #Check missing values in the database_result DataFrame.
 database_result.isnull().sum()
 
 
-# In[433]:
+# In[661]:
 
 
 # Drop rows where CO2 is missing, because CO2 is an essential data point for our analysis.
@@ -469,35 +469,35 @@ database_result['population'] = database_result['population'].fillna(database_re
 database_result['methane'] = database_result['methane'].fillna(database_result['methane'].median())
 
 
-# In[434]:
+# In[662]:
 
 
 # Check again
 database_result.isnull().sum()
 
 
-# In[435]:
+# In[663]:
 
 
 # Dropping missing values from the result DataFrame.
 database_result.dropna(inplace=True)
 
 
-# In[436]:
+# In[664]:
 
 
 # Checking for null values after dropping them.
 database_result.isnull().sum()
 
 
-# In[437]:
+# In[665]:
 
 
 # Checking the data types of the columns in the database_result DataFrame.
 print(database_result.dtypes)
 
 
-# In[438]:
+# In[666]:
 
 
 # Checking the data types of the columns in the result DataFrame.
@@ -506,7 +506,7 @@ print(database_result.dtypes)
 
 # ##### Check for any outliers in the database_result dataframe.
 
-# In[439]:
+# In[667]:
 
 
 # Create a box plot to visualize the distribution of CO2 emissions in the database_result DataFrame.
@@ -514,7 +514,7 @@ sns.boxplot(x=database_result['co2'])
 plt.show()
 
 
-# In[440]:
+# In[668]:
 
 
 # Remove outliers from the result DataFrame based on the CO2 emissions column.
@@ -525,7 +525,7 @@ database_result = database_result[database_result['co2'] < database_result['co2'
 
 # - Cleanup data in the World Bank Indicater DataFrame (Reshaped)
 
-# In[441]:
+# In[669]:
 
 
 # Cleanup the Year column in the wdi_reshaped DataFrame by extracting the year part. 
@@ -535,21 +535,21 @@ wdi_reshaped['year'] = wdi_reshaped['year'].str.extract(r'(\d{4})')
 wdi_reshaped.head()
 
 
-# In[442]:
+# In[670]:
 
 
 # Check the data types of the columns in the wdi_reshaped DataFrame.
 wdi_reshaped.info()
 
 
-# In[443]:
+# In[671]:
 
 
 # Check the data in the wdi_reshaped DataFrame after cleaning the year column.
 wdi_reshaped.sample(5)
 
 
-# In[444]:
+# In[672]:
 
 
 # Convert the data types of the wdi_reshaped DataFrame to appropriate types for analysis.
@@ -564,14 +564,14 @@ wdi_reshaped['series_value'] = pd.to_numeric(
 wdi_reshaped.info()
 
 
-# In[445]:
+# In[675]:
 
 
 # Check the data after conversion.
 wdi_reshaped.sample(5)
 
 
-# In[446]:
+# In[676]:
 
 
 # Check for missing values in the wdi_reshaped DataFrame after conversion.
@@ -580,7 +580,7 @@ wdi_reshaped.isna().sum()
 
 # - Observing lot of missing values in the series_value column of the wdi_reshaped DataFrame after conversion, we need to remove them for better analysis
 
-# In[447]:
+# In[677]:
 
 
 # Removing the missing values from the wdi_reshaped DataFrame to ensure that our analysis is based on complete data.
@@ -589,35 +589,35 @@ wdi_cleaned = wdi_reshaped.dropna(subset=['series_value'])
 wdi_cleaned.isna().sum()
 
 
-# In[448]:
+# In[678]:
 
 
 # Check the info of the wdi_cleaned DataFrame after removing missing values.
 wdi_cleaned.info()
 
 
-# In[449]:
+# In[679]:
 
 
 # Check the data in the wdi_cleaned DataFrame after removing missing values.
 wdi_cleaned.head()
 
 
-# In[450]:
+# In[680]:
 
 
 # Reset the index of the wdi_cleaned DataFrame after dropping missing values to ensure a clean index for analysis.
 wdi_cleaned = wdi_cleaned.reset_index(drop=True)
 
 
-# In[451]:
+# In[681]:
 
 
 # Check the data in the wdi_cleaned DataFrame after resetting the index.
 wdi_cleaned.head()
 
 
-# In[452]:
+# In[682]:
 
 
 # Rename the columns in Methane_final_df to standardize the data sets
@@ -630,7 +630,7 @@ print(wdi_cleaned.columns)
 
 # ##### Adding a few visualizations on the cleaned world data indicators data
 
-# In[453]:
+# In[683]:
 
 
 # Picking one indicater - GDP per capita (current US$) - from the wdi_cleaned DataFrame for further analysis.
@@ -639,7 +639,7 @@ gdp_data = wdi_cleaned[
 ]
 
 
-# In[454]:
+# In[684]:
 
 
 # Pick 3 countries for easier analysis and visualization.
@@ -649,7 +649,7 @@ countries = ['United States', 'India', 'China']
 gdp_data = gdp_data[gdp_data['country'].isin(countries)]
 
 
-# In[455]:
+# In[685]:
 
 
 plt.figure(figsize=(10,6))
@@ -669,13 +669,13 @@ plt.show()
 
 # - I will use the above visualization to relate to emissions using the CO2 emissions series from the dataset on the same countries.
 
-# In[456]:
+# In[686]:
 
 
 wdi_cleaned['Series Name'].unique()
 
 
-# In[457]:
+# In[687]:
 
 
 # Getting the emissions data to check against the countries above.
@@ -684,7 +684,7 @@ emissions_data = wdi_cleaned[
 ]
 
 
-# In[458]:
+# In[688]:
 
 
 # Extract the emissions data for the selected countries to compare with the GDP data.
@@ -695,7 +695,7 @@ emissions_data = emissions_data[
 emissions_data.head()
 
 
-# In[459]:
+# In[689]:
 
 
 plt.figure(figsize=(10,6))
@@ -715,7 +715,7 @@ plt.show()
 
 # ##### The World Bank dataset originally stored multiple indicators in a single column, with their names in the Series Name column. A pivot operation was applied to convert each unique value in Series Name into its own column using country and year as keys. This resulted in a structured dataset where each indicator became a separate feature suitable for machine learning.
 
-# In[460]:
+# In[690]:
 
 
 wdi_pivot = wdi_cleaned.pivot_table(
@@ -725,14 +725,14 @@ wdi_pivot = wdi_cleaned.pivot_table(
 ).reset_index()
 
 
-# In[461]:
+# In[691]:
 
 
 # Check the data in the wdi_pivot DataFrame after pivoting.
 wdi_pivot.head()
 
 
-# In[462]:
+# In[692]:
 
 
 # Rename the columns in the wdi_pivot DataFrame for meaningful names.
@@ -748,7 +748,7 @@ wdi_pivot = wdi_pivot.rename(columns={
 wdi_pivot.head()
 
 
-# In[463]:
+# In[693]:
 
 
 wdi_pivot.info()
@@ -756,13 +756,13 @@ wdi_pivot.info()
 
 # - Cleanup data in the Methane dataframe
 
-# In[469]:
+# In[694]:
 
 
 Methane_final_df.head()
 
 
-# In[470]:
+# In[695]:
 
 
 # Methane_final_df has the years in range as visible in abouve head commmand. Splitting this data into multiple rows based on the year column 
@@ -798,14 +798,14 @@ for _, row in Methane_final_df.iterrows():
 Methane_final_df = pd.DataFrame(expanded_rows)
 
 
-# In[471]:
+# In[696]:
 
 
 #Check the new DataFrame after expanding the year ranges.
 Methane_final_df.head()
 
 
-# In[472]:
+# In[697]:
 
 
 # Rename the columns in Methane_final_df to standardize the data sets
@@ -817,14 +817,14 @@ Methane_final_df = Methane_final_df.rename(columns={
 print(Methane_final_df.columns)
 
 
-# In[473]:
+# In[698]:
 
 
 # Checking the data types of the columns in the Carbon_emissions_df DataFrame.
 print(Carbon_emissions_df.dtypes)
 
 
-# In[474]:
+# In[699]:
 
 
 # Rename the carbon_emissions_df DataFrame columns to standardize the data sets.
@@ -835,19 +835,19 @@ Carbon_emissions_df = Carbon_emissions_df.rename(columns={
 })
 
 
-# In[475]:
+# In[700]:
 
 
 print(Carbon_emissions_df.columns)
 
 
-# In[476]:
+# In[563]:
 
 
 Carbon_emissions_df.info()
 
 
-# In[477]:
+# In[701]:
 
 
 # Add a new column year to the carbon_emissions_df DataFrame by extracting the year 
@@ -862,7 +862,7 @@ Carbon_emissions_df['year'] = Carbon_emissions_df['Date'].dt.year
 Carbon_emissions_df[['Date', 'year']].head()
 
 
-# In[478]:
+# In[702]:
 
 
 Carbon_emissions_per_capita_df = Carbon_emissions_per_capita_df.rename(columns={
@@ -872,26 +872,26 @@ Carbon_emissions_per_capita_df = Carbon_emissions_per_capita_df.rename(columns={
 })
 
 
-# In[479]:
+# In[703]:
 
 
 print(Carbon_emissions_per_capita_df.columns)
 
 
-# In[480]:
+# In[704]:
 
 
 Carbon_emissions_per_capita_df.head()
 
 
-# In[481]:
+# In[705]:
 
 
 # Checking the data types of the columns in the Carbon_emissions_per_capita_df DataFrame.
 print(Carbon_emissions_per_capita_df.dtypes)
 
 
-# In[482]:
+# In[718]:
 
 
 # Change the data for country to be uniform accross all the datasets.
@@ -902,7 +902,7 @@ Carbon_emissions_df['country'] = Carbon_emissions_df['country'].str.lower().str.
 Carbon_emissions_per_capita_df['country'] = Carbon_emissions_per_capita_df['country'].str.lower().str.strip()
 
 database_result['country'] = database_result['country'].str.lower().str.strip()
-wdi_cleaned['country'] = wdi_cleaned['country'].str.lower().str.strip()
+wdi_pivot['country'] = wdi_pivot['country'].str.lower().str.strip()
 
 
 # ### 1. Machine Learning Plan
@@ -921,7 +921,7 @@ wdi_cleaned['country'] = wdi_cleaned['country'].str.lower().str.strip()
 
 # #### Combining the datasets to create a final dataframe on which I will apply the machine learning regression models.
 
-# In[483]:
+# In[707]:
 
 
 print(database_result.columns)
@@ -930,7 +930,7 @@ print(Carbon_emissions_df.columns)
 print(Carbon_emissions_per_capita_df.columns)
 
 
-# In[484]:
+# In[721]:
 
 
 # Combine the database result DataFrame with methane dataframe.
@@ -965,14 +965,20 @@ final_df = final_df.merge(
 
 # ##### Perform Exploratory Data analysis on the final_df dataframe
 
-# In[485]:
+# In[722]:
 
 
 # Check the info for the final Dataframe.
 final_df.info()
 
 
-# In[364]:
+# In[723]:
+
+
+final_df.head()
+
+
+# In[724]:
 
 
 # Remove unnecessary columns from the final_df DataFrame that are not needed for our analysis.
@@ -987,13 +993,13 @@ final_df = final_df.drop(columns=[
 ])
 
 
-# In[365]:
+# In[725]:
 
 
 final_df.describe()
 
 
-# In[ ]:
+# In[726]:
 
 
 # Check for missing values in the final DataFrame.
@@ -1002,7 +1008,7 @@ final_df.isnull().sum()
 
 # - The dataset contains missing values mainly in the World Bank features, while core variables like CO₂, methane, and population are complete. These missing values occur due to limited data availability across countries and years and will be handled using imputation during preprocessing.
 
-# In[367]:
+# In[727]:
 
 
 # Rename the columns in the final_df DataFrame to standardize the data sets.
@@ -1013,7 +1019,7 @@ final_df.rename(columns={
 final_df.info()
 
 
-# In[369]:
+# In[728]:
 
 
 # Check the correlation between the numerical columns in the final DataFrame to understand the relationships
@@ -1021,7 +1027,7 @@ final_df.info()
 final_df.corr(numeric_only=True)
 
 
-# In[372]:
+# In[729]:
 
 
 # Prepare the data for machine learning by splitting the final DataFrame into features (X) and target variable (y),
@@ -1033,7 +1039,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 
-# In[373]:
+# In[730]:
 
 
 # Seperate numerical and categorical columns.
@@ -1044,7 +1050,7 @@ print("Numeric columns:", num_cols)
 print("Categorical columns:", cat_cols)
 
 
-# In[377]:
+# In[731]:
 
 
 # Impute missing values in the numerical columns with the median and scale the features using StandardScaler. 
@@ -1055,7 +1061,7 @@ num_pipeline = Pipeline([
 ])
 
 
-# In[379]:
+# In[732]:
 
 
 # Impute missing values in the categorical columns with the most frequent value 
@@ -1066,7 +1072,7 @@ cat_pipeline = Pipeline([
 ])
 
 
-# In[381]:
+# In[733]:
 
 
 # Combine the numerical and categorical pipelines into a ColumnTransformer 
@@ -1077,7 +1083,7 @@ preprocessor = ColumnTransformer([
 ])
 
 
-# In[ ]:
+# In[734]:
 
 
 # Fit and transform the training data.
@@ -1085,7 +1091,7 @@ X_train_prepared = preprocessor.fit_transform(X_train)
 X_test_prepared = preprocessor.transform(X_test)
 
 
-# In[383]:
+# In[735]:
 
 
 print(X_train_prepared.shape)
@@ -1094,7 +1100,7 @@ print(X_test_prepared.shape)
 
 # - The dataset was split into training and testing sets using an 80-20 ratio. The training set contains 23,272 records, while the test set contains 5,818 records. Each dataset includes 14 features used to predict CO₂ emissions, ensuring sufficient data for model training and evaluation.
 
-# In[ ]:
+# In[736]:
 
 
 # Train a linear regression model.
@@ -1102,7 +1108,7 @@ lin_reg = LinearRegression()
 lin_reg.fit(X_train_prepared, y_train)
 
 
-# In[385]:
+# In[737]:
 
 
 # Train a polynomial regression model.
@@ -1114,7 +1120,7 @@ poly_model = Pipeline([
 poly_model.fit(X_train_prepared, y_train)
 
 
-# In[390]:
+# In[738]:
 
 
 lin_train_preds = lin_reg.predict(X_train_prepared)
@@ -1126,7 +1132,7 @@ lin_test_rmse = np.sqrt(mean_squared_error(y_test, lin_test_preds))
 print("Linear Regression RMSE (test):", lin_test_rmse)
 
 
-# In[393]:
+# In[739]:
 
 
 poly_train_preds = poly_model.predict(X_train_prepared)
@@ -1156,7 +1162,7 @@ print("Polynomial Regression RMSE (test):", poly_test_rmse)
 # I imported another data set during checkpoint 3 from the world bank development indicator website
 # https://databank.worldbank.org/source/world-development-indicators#
 
-# In[184]:
+# In[589]:
 
 
 # ⚠️ Make sure you run this cell at the end of your notebook before every submission!
